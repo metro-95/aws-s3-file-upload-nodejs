@@ -1,7 +1,9 @@
 var dynamo = require('dynamodb');
 const Joi = require('joi');
 require('dotenv').config()
+const express = require('express');
 
+const app = express();
 
 /** Set AWS Access Keys */
 dynamo.AWS.config.update({
@@ -65,13 +67,21 @@ User.get('johnsmith@gmail.com', {ConsistentRead: true, ProjectionExpression : 'e
   console.log(res.get('age'));
 });
 
+
+var users = [];
+
 /** Get All Data from DynamoDB */
 User.scan().loadAll().exec(function(err, res) {
-    var users = [];
     users = users.concat(res.Items);
-
     users.forEach(function(user) {
-        console.log(user.attrs)
+        const data = user.attrs;
+        // console.log(data);
     });
+});
 
-  });
+
+app.get('/', (req, res) => {
+    res.send({response: users});
+});
+
+const server = app.listen(3000, () => console.log("Server is up and running! 😃😃😃 "));
