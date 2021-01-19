@@ -2,8 +2,13 @@ var dynamo = require('dynamodb');
 const Joi = require('joi');
 require('dotenv').config()
 const express = require('express');
+const bodyParser = require('body-parser');
+
 
 const app = express();
+app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 /** Set AWS Access Keys */
 dynamo.AWS.config.update({
@@ -34,7 +39,7 @@ var User = dynamo.define('User', {
     }
   });
 
-/** Link Model with Table */
+// /** Link Model with Table */
 User.config({tableName: 'user'});
 
 /** Insert Data into DynamoDB */
@@ -80,8 +85,25 @@ User.scan().loadAll().exec(function(err, res) {
 });
 
 
+/** Get All Data via localhost */
 app.get('/', (req, res) => {
     res.send({response: users});
+});
+
+/** Post Data via localhost */
+app.post('/users', (req, res) => {
+  const email = req.body.email;
+  const name = req.body.name;
+  const age = req.body.age;
+
+  User.create({
+    email: email,
+    name: name,
+    age: age
+  }, function (err, res) {
+    res.send({response: res.get('email') });
+  });
+
 });
 
 const server = app.listen(3000, () => console.log("Server is up and running! 😃😃😃 "));
