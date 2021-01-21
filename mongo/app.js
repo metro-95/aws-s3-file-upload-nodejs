@@ -15,6 +15,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+
+
 userroutes(app);
 authroutes(app);
 
@@ -30,6 +35,8 @@ mongoose.connection.once('open',function(){
 }).on('error',function(err){
     console.log('Error', err);
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(3000, function () {
     console.log('Listening to Port 3000');
