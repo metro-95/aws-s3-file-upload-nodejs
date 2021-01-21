@@ -4,10 +4,10 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const User = require('./models/user');
 const Auth = require('./models/auth')
-var routes = require('./routes/userroute');
+var userroutes = require('./routes/userroute');
 var authroutes = require('./routes/authroute')
 const test = require('./routes/test')
-const validateToken = require('./validation/tokenvalidation')
+const validateToken = require('./middlewares/tokenvalidation')
 
 const app = express();
 /** Middlewares */
@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-routes(app);
+userroutes(app);
 authroutes(app);
 
 /**TODO: CHANGE AUTHORIZATION TOKEN FROM HEADER TO BEARER TOKEN */
