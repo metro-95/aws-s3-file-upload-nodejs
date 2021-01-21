@@ -15,6 +15,7 @@ exports.create = (req, res) => {
 
 /** Get All Items */
 exports.index = (req, res) => {
+    const data = { user: req.user }
     User.find({}, function(err, task) {
       if (err)
         res.send(err);

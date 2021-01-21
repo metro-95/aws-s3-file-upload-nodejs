@@ -1,7 +1,9 @@
+const verifyToken = require('../validation/tokenvalidation')
+
 module.exports = function(app) {
     var employee = require('../controllers/usercontroller');
 
-    app.route('/employees')
+    app.route('/employees', verifyToken)
        .get(employee.index)
        .post(employee.create)
 
